@@ -1,10 +1,12 @@
 # dsh-llm-grok-oauth 0.2.11-dsh2.0.17
 
-本地最终版。基于 wangyaominde/dsh-llm-grok-oauth `0.2.10`，适配 **DSH Desktop 2.0.17**（Windows，dsh-settings 0.2.0-rc.2）。上游 0.2.10 在这个版本上无法启动。
+本地最终版。基于 wangyaominde/dsh-llm-grok-oauth `0.2.10`，只适配独立的 **DSH Desktop 2.0.17**（Windows 桌面应用，profile 名 `desktop`，界面 `http://127.0.0.1:43120`，dsh-settings 0.2.0-rc.2）。
+
+这不是 DSH Web，也不是 `dsh web` 的 `web` profile（常见端口 3080）。上游 README 里的 `--profile web` 和 `npx @deepseek-ai/dsh` 不适用于这个桌面版。上游 0.2.10 在 DSH Desktop 2.0.17 上无法启动。
 
 ## 前置条件
 
-- DSH Desktop 2.0.17。
+- 独立的 DSH Desktop 2.0.17。安装目录形如 `D:\Program Files\DSH Desktop`。不要装到 DSH Web 的 `web` profile。
 - 有效的 SuperGrok 订阅账号。登录走 `auth.x.ai`，聊天走 `cli-chat-proxy.grok.com`。这是 CLI 通道，不是网页聊天，也不是 console.x.ai 的按量 API。
 - 能访问 xAI。本机已验证系统代理 `http://127.0.0.1:7890` 会被 DSH 读取；插件自己的请求还读取 `HTTPS_PROXY` / `https_proxy` / `ALL_PROXY` / `all_proxy`。TUN 模式最稳。
 - 不需要安装官方 Grok CLI。本机即使装了 `grok.exe`，插件也不调用它。
