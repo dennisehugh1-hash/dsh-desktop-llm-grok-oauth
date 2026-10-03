@@ -1,4 +1,4 @@
-# dsh-llm-grok-oauth 0.2.11-dsh2.0.17
+# dsh-llm-grok-oauth 0.2.12-dsh2.0.17
 
 本地最终版。基于 wangyaominde/dsh-llm-grok-oauth `0.2.10`，只适配独立的 **DSH Desktop 2.0.17**（Windows 桌面应用，profile 名 `desktop`，界面 `http://127.0.0.1:43120`，dsh-settings 0.2.0-rc.2）。
 
@@ -42,13 +42,25 @@ grok-oauth: /responses limits: x-ratelimit-limit-requests=8300; x-ratelimit-rema
 ## 已知限制
 
 - **模型卡片的「编辑」没有用。** DSH 2.0.17 只给 `llm-deepseek` 和 `llm-pi-ai` 写了编辑器，`llm-grok` 会落到 `unknown` 布局，保存按钮被禁用。配置改 `~\.dsh\profiles\desktop\cordis.patch.yml` 里 `id: llm-grok` 的层。
-- **不支持上传图片。** 当前 wire 只发文本。
 - 服务端最低客户端版本会变。默认上报 `1.0.13`。再被 HTTP 426 拒绝时，在 `llm-grok` 配置层加 `clientVersion: "新版本号"`，保存即可，不必改代码。
 - 登录状态回写设置文档仍可能出现 `no volatile fields` 警告，不影响登录和聊天。
+
+## 图片
+
+0.2.12 起，Responses 路线（当前账号目录里的 Grok 4.7 / 4.7 Fast / 4.6 / 4.5）声明 `inputModalities: ['text', 'image']`。图片不再在进模型前被换成 “accepts text only”。
+
+字节来自 DSH 附件服务的 `readImageRequest`，和官方 DeepSeek adapter 同一条路径。请求体使用已经在 `cli-chat-proxy.grok.com/v1/responses` 上核对过的字段：
+
+```json
+{ "type": "input_image", "image_url": "data:image/png;base64,..." }
+```
+
+代理拒绝边长小于 8 或总像素少于 512 的图。长边超过 4096 的图会先缩小。聊天补全方言（当前目录里没有这种模型）仍只收文本。
 
 ## 相对上游 0.2.10 的改动
 
 - `lib/settings-compat.js`：补回 2.0.17 删除的 `settingsNamespace` / `installSettingsSection` / `deepEqualJson`。`setSource` 传入 getter。
 - `lib/client.js`：不再读取已不存在的 `ctx.settingsScope`（读取即抛错并让渲染进程启动失败）。登录状态走 `/api/llm-grok/status` 轮询。
 - `lib/index.js`：登录状态字段标记 `.volatile()`；新增 `clientVersion` 配置，默认 `1.0.13`。
-- `lib/adapter.js`：请求头 `x-grok-client-version` 使用 `clientVersion`；成功和失败响应都记录限流头。
+- `lib/adapter.js`：请求头 `x-grok-client-version` 使用 `clientVersion`；成功和失败响应都记录限流头。Responses 模型声明图片输入，并用附件服务读取请求图。
+- `lib/wire.js`：Responses 请求把图片块写成 `input_image` data URL，不再替换成省略占位符。

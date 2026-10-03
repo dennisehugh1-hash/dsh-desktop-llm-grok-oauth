@@ -1,7 +1,7 @@
 {
   "name": "dsh-llm-grok-oauth",
   "description": "Grok (xAI) subscription OAuth provider for DeepSeek Harness: one-click login in Settings → Models, token refresh, live catalog, streaming over cli-chat-proxy.grok.com",
-  "version": "0.2.11-dsh2.0.17",
+  "version": "0.2.12-dsh2.0.17",
   "keywords": [
     "dsh",
     "dsh-plugin",
@@ -12,12 +12,12 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/wangyaominde/dsh-llm-grok-oauth.git"
+    "url": "git+https://github.com/dennisehugh1-hash/dsh-desktop-llm-grok-oauth.git"
   },
   "bugs": {
-    "url": "https://github.com/wangyaominde/dsh-llm-grok-oauth/issues"
+    "url": "https://github.com/dennisehugh1-hash/dsh-desktop-llm-grok-oauth/issues"
   },
-  "homepage": "https://github.com/wangyaominde/dsh-llm-grok-oauth#readme",
+  "homepage": "https://github.com/dennisehugh1-hash/dsh-desktop-llm-grok-oauth#readme",
   "author": "wangyaominde",
   "type": "module",
   "main": "lib/index.js",
@@ -43,14 +43,14 @@
     },
     "market": {
       "displayName": "Grok OAuth",
-      "icon": "https://raw.githubusercontent.com/wangyaominde/dsh-llm-grok-oauth/main/docs/icon.png",
+      "icon": "https://raw.githubusercontent.com/dennisehugh1-hash/dsh-desktop-llm-grok-oauth/main/docs/icon.png",
       "categories": [
         "llm",
         "provider",
         "oauth"
       ],
       "screenshots": [
-        "https://raw.githubusercontent.com/wangyaominde/dsh-llm-grok-oauth/main/docs/en/models-login.jpg"
+        "https://raw.githubusercontent.com/dennisehugh1-hash/dsh-desktop-llm-grok-oauth/main/docs/en/models-login.jpg"
       ]
     },
     "marketplace": {
