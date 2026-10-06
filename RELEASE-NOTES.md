@@ -1,4 +1,4 @@
-# dsh-llm-grok-oauth 0.2.12-dsh2.0.17
+# dsh-llm-grok-oauth 0.2.14-dsh2.0.17
 
 本地最终版。基于 wangyaominde/dsh-llm-grok-oauth `0.2.10`，只适配独立的 **DSH Desktop 2.0.17**（Windows 桌面应用，profile 名 `desktop`，界面 `http://127.0.0.1:43120`，dsh-settings 0.2.0-rc.2）。
 
@@ -57,10 +57,14 @@ grok-oauth: /responses limits: x-ratelimit-limit-requests=8300; x-ratelimit-rema
 
 代理拒绝边长小于 8 或总像素少于 512 的图。长边超过 4096 的图会先缩小。聊天补全方言（当前目录里没有这种模型）仍只收文本。
 
+## 中途 502
+
+0.2.14：同一次请求若收到 HTTP 502、503 或 504，插件会再发最多 3 次（间隔 1 秒、3 秒、8 秒）。其中一次成功，这一轮就继续，已经打出来的文字和工具调用都还在。三次都失败才显示「本轮运行失败 Grok API error (HTTP 502)」。宿主日志搜索 `grok-oauth: HTTP 502`，成功时会有 `recovered on resend`。
+
 ## 相对上游 0.2.10 的改动
 
 - `lib/settings-compat.js`：补回 2.0.17 删除的 `settingsNamespace` / `installSettingsSection` / `deepEqualJson`。`setSource` 传入 getter。
 - `lib/client.js`：不再读取已不存在的 `ctx.settingsScope`（读取即抛错并让渲染进程启动失败）。登录状态走 `/api/llm-grok/status` 轮询。
 - `lib/index.js`：登录状态字段标记 `.volatile()`；新增 `clientVersion` 配置，默认 `1.0.13`。
-- `lib/adapter.js`：请求头 `x-grok-client-version` 使用 `clientVersion`；成功和失败响应都记录限流头。Responses 模型声明图片输入，并用附件服务读取请求图。
+- `lib/adapter.js`：请求头 `x-grok-client-version` 使用 `clientVersion`；成功和失败响应都记录限流头。Responses 模型声明图片输入，并用附件服务读取请求图。HTTP 502/503/504 先再发最多 3 次，避免整轮被一次网关失败停掉。
 - `lib/wire.js`：Responses 请求把图片块写成 `input_image` data URL，不再替换成省略占位符。
